@@ -1,9 +1,13 @@
 A = "A"
 B = "B"
+C = "C"
+D = "D"
 
 Environment = {
     A: "Dirty",
     B: "Dirty",
+    C: "Clean",
+    D: "Dirty",
     "Current": A
 }
 
@@ -13,7 +17,11 @@ def REFLEX_VACUUM_AGENT(loc_st):
     if loc_st[0] == A:
         return "Right"
     if loc_st[0] == B:
-        return "Left"
+        return "Right"
+    if loc_st[0] == C:
+        return "Right"
+    if loc_st[0] == D:
+        return "Right"
 
 def Sensors():
     location = Environment["Current"]
@@ -25,7 +33,11 @@ def Actuators(action):
         Environment[location] = "Clean"
     elif action == "Right" and location == A:
         Environment["Current"] = B
-    elif action == "Left" and location == B:
+    elif action == "Right" and location == B:
+        Environment["Current"] = C
+    elif action == "Right" and location == C:
+        Environment["Current"] = D
+    elif action == "Right" and location == D:
         Environment["Current"] = A
 
 def run(n, make_agent):
@@ -40,4 +52,6 @@ def run(n, make_agent):
         print("{:12s}{:8s}{:12s}".format(action, location, status))
 
 
-run(10, REFLEX_VACUUM_AGENT)
+run(20, REFLEX_VACUUM_AGENT)
+
+#Question: While it runs it does not give correct information
