@@ -6,9 +6,9 @@ class Node:  # Node has only PARENT_NODE, STATE, DEPTH
         self.STATE = state
         self.PARENT_NODE = parent
         self.DEPTH = depth
-
-    def getstate(self):
-        return self.STATE
+        self.g = state[1]
+        self.h = state[0][1]
+        self.f = 0
 
     def path(self):  # Create a list of nodes from the root to this node.
         current_node = self
@@ -36,9 +36,9 @@ D = ("D", 2)
 E = ("E", 4)
 F = ("F", 5)
 G = ("G", 4)
-H = ("H", 1)
-I = ("I", 2)
-J = ("J", 1)
+H = ("H", 4)
+I = ("I", 1)
+J = ("J", 6)
 K = ("K", 0)
 L = ("L", 0)
 
@@ -47,22 +47,25 @@ def BEST_FIRST():
     fringe = []
     initial_node = Node(INITIAL_STATE)
     fringe = INSERT(initial_node, fringe)
-    run = 1
-    while run == 1:
-        node = REMOVE_FIRST(fringe)
-        if node.STATE == GOAL_STATE:
-            return node.path()
-        children = EXPAND(node)
-        if children.__len__() == 0:
-            return node.path()
-        nodeDistance = sys.maxsize
-        bestNode = None
-        for element in children:
-            if element.STATE[0][1] < nodeDistance:
-                bestNode = element
-                nodeDistance = element.STATE[0][1]
-        fringe = INSERT(bestNode, fringe)
+    best = fringe[0]
+    while fringe is not None:
+        print(fringe)
+        print(best)
+        currentIndex = 0
+        index = 0
+        for element in fringe:
+            if element.h < best.h:
+                best = element
+                currentIndex = index
+            index += 1
+
+        fringe.pop(currentIndex)
         print("fringe: {}".format(fringe))
+        if best.STATE[0] == GOAL_STATE[0]:
+            return best.path()
+
+        children = EXPAND(best)
+        fringe = INSERT_ALL(children, fringe)
 
 
 '''
@@ -75,10 +78,12 @@ def EXPAND(node):
     successors = []
     children = successor_fn(node.STATE[0])
     for child in children:
-        s = Node(node)  # create node for each in state list
+        s = Node(child)  # create node for each in state list
         s.STATE = child  # e.g. result = 'F' then 'G' from list ['F', 'G']
         s.PARENT_NODE = node
         s.DEPTH = node.DEPTH + 1
+        s.g = node.g + child[1]
+        s.f = s.g + s.h
         successors = INSERT(s, successors)
     return successors
 
