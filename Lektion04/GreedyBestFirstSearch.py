@@ -6,9 +6,8 @@ class Node:  # Node has only PARENT_NODE, STATE, DEPTH
         self.STATE = state
         self.PARENT_NODE = parent
         self.DEPTH = depth
-        self.g = state[1]
+
         self.h = state[0][1]
-        self.f = 0
 
     def path(self):  # Create a list of nodes from the root to this node.
         current_node = self
@@ -32,13 +31,13 @@ Search the tree for the goal state and return path from initial state to goal st
 A = ("A", 6)
 B = ("B", 5)
 C = ("C", 5)
-D = ("D", 2)
+D = ("D", 4)
 E = ("E", 4)
 F = ("F", 5)
-G = ("G", 4)
-H = ("H", 4)
-I = ("I", 1)
-J = ("J", 6)
+G = ("G", 3)
+H = ("H", 1)
+I = ("I", 2)
+J = ("J", 1)
 K = ("K", 0)
 L = ("L", 0)
 
@@ -58,7 +57,9 @@ def BEST_FIRST():
                 best = element
                 currentIndex = index
             index += 1
-
+        if len(fringe) == 0:
+            print("No path found")
+            return best.path;
         fringe.pop(currentIndex)
         print("fringe: {}".format(fringe))
         if best.STATE[0] == GOAL_STATE[0]:
@@ -82,8 +83,7 @@ def EXPAND(node):
         s.STATE = child  # e.g. result = 'F' then 'G' from list ['F', 'G']
         s.PARENT_NODE = node
         s.DEPTH = node.DEPTH + 1
-        s.g = node.g + child[1]
-        s.f = s.g + s.h
+
         successors = INSERT(s, successors)
     return successors
 
@@ -130,7 +130,7 @@ def successor_fn(state):  # Lookup list of successor states
 
 
 INITIAL_STATE = (A, 0)
-GOAL_STATE = (L, 0)
+GOAL_STATE = (K, 0)
 STATE_SPACE = {
     A: [(B, 1), (C, 2), (D, 4)],
     B: [(F, 5), (E, 4)],

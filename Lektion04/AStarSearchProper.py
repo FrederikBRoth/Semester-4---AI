@@ -16,6 +16,7 @@ class Node:  # Node has only PARENT_NODE, STATE, DEPTH
         while current_node.PARENT_NODE:  # while current node has parent
             current_node = current_node.PARENT_NODE  # make parent the current node
             path.append(current_node)  # add current node to path
+        path.reverse()
         return path
 
     def display(self):
