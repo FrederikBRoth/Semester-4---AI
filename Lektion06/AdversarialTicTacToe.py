@@ -43,6 +43,7 @@ def utility_of(state):
     wins = win_conditions(state)
     for win in wins:
         if win == ("X", "X", "X"):
+
             return 1
         elif win == ("O", "O", "O"):
             return -1

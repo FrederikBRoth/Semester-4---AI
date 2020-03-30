@@ -122,3 +122,5 @@ def run():
     for node in path:
         node.display()
 
+
+run()

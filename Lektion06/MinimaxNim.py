@@ -22,7 +22,7 @@ def minmax_decision(state):
     return action
 
 
-def is_terminal(state, player):
+def is_terminal(state, player=True):
     """
     returns True if the state is either a win or a tie (board full)
     :param state: State of the checkerboard. Ex: [0; 1; 2; 3; X; 5; 6; 7; 8]
@@ -40,6 +40,7 @@ def utility_of(state, player):
     :param state: State of the checkerboard. Ex: [0; 1; 2; 3; X; 5; 6; 7; 8]
     :return:
     """
+    player1 = player
     if len(successors_of(state)) == 0:
         if player:
             return -1
@@ -70,6 +71,7 @@ def successors_of(state):
             count += 1
     return successors
 
+
 def new_board(board, index):
     count = 0
     move = []
@@ -95,12 +97,14 @@ def check_board_moves(state):
     return moves_left
 
 
-
 def main():
+    player = bool()
     board = [7]
     while not is_terminal(board, False):
+        player = False
         board = new_board(board, minmax_decision(board))
         if not is_terminal(board, True):
+            player = True
             print("hej")
             print(board)
             input_str = input('Your move? ');
@@ -108,6 +112,11 @@ def main():
             for i in range(0, len(input_list)):
                 input_list[i] = int(input_list[i])
             board = input_list.copy()
+    if is_terminal(board):
+        if player:
+            print("player won!")
+        else:
+            print("computer won!")
     print(board)
 
 
@@ -126,8 +135,11 @@ def sum_to_n(n, size, limit=None):
 
 def argmax(iterable, func):
     return max(iterable, key=func)
+
+
 def argmin(iterable, func):
     return min(iterable, key=func)
+
 
 if __name__ == '__main__':
     main()
