@@ -1,23 +1,30 @@
-def minmax_decision(state):
-    def max_value(state):
+def alpha_beta_decision(state):
+    infinity = float('inf')
+
+    def max_value(state, alpha, beta):
         if is_terminal(state, False):
             return utility_of(state, False)
         v = -infinity
-        for (a, s) in successors_of(state):
-            v = max(v, min_value(s))
-        print('V: ' + str(v))
+        for (a, successor) in successors_of(state):
+            v = max(v, min_value(successor, alpha, beta))
+            if v >= beta:
+                return v
+            alpha = min(alpha, v)
         return v
 
-    def min_value(state):
+    def min_value(state, alpha, beta):
         if is_terminal(state, True):
             return utility_of(state, True)
         v = infinity
-        for (a, s) in successors_of(state):
-            v = min(v, max_value(s))
+
+        for (a, successor) in successors_of(state):
+            v = min(v, max_value(successor, alpha, beta))
+            if v <= alpha:
+                return v
+            beta = max(beta, v)
         return v
 
-    infinity = float('inf')
-    action, state = argmin(successors_of(state), lambda a: max_value(a[1]))
+    action, state = argmin(successors_of(state), lambda a: max_value(a[1], infinity, -infinity))
     return action
 
 
@@ -100,7 +107,7 @@ def main():
     board = [15]
     while not is_terminal(board, False):
         player = False
-        board = new_board(board, minmax_decision(board))
+        board = new_board(board, alpha_beta_decision(board))
         if not is_terminal(board, True):
             player = True
             print(board)
